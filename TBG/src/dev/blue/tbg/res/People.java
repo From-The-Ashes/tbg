@@ -1,5 +1,11 @@
 package dev.blue.tbg.res;
 
-public class People {
+import java.util.HashMap;
 
+public class People {
+	HashMap<Type, Integer> assets = new HashMap<Type, Integer>();
+	
+	public enum Type{
+		CHILDREN, WIVES, SERVANTS, EMPLOYEES, SLAVES
+	}
 }

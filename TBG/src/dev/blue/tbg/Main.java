@@ -8,13 +8,16 @@ public class Main {
 	private static int cdelay = 400;
 	private static int sdelay = 750;
 	private static int ldelay = 1000;
+	private static Engine engine;
 
 	public static void main(String[] args) {
-		scanner = new Scanner(System.in);
-		sayfast("-------------------------TBG-------------------------\n\n\n");
-		engageMainMenu();
-		pause(1200);
-		engageCharacterCreation();
+		//scanner = new Scanner(System.in);
+		//sayfast("-------------------------TBG-------------------------\n\n\n");
+		//engageMainMenu();
+		//pause(1200);
+		//engageCharacterCreation();
+		engine = new Engine();
+		engine.start();
 	}
 	
 	private static void engageMainMenu() {}
