@@ -39,6 +39,17 @@ public class Engine implements Runnable {
 			if (now - lastTick >= interval) {
 				update();
 				lastTick+=interval;
+			}else {
+				long timeToSleep = (interval - (now - lastTick)) / 1_000_000L;
+				if(timeToSleep > 1) {
+					try {
+						Thread.sleep(timeToSleep);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}else {
+					Thread.yield();
+				}
 			}
 		}
 		stop();
