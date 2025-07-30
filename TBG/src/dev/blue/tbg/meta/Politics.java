@@ -1,5 +1,5 @@
 package dev.blue.tbg.meta;
 
-public class Meta {
+public class Politics {
 
 }
