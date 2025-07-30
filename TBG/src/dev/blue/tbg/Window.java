@@ -9,6 +9,8 @@ import java.awt.Toolkit;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
 
+import dev.blue.tbg.calendar.Clock;
+
 public class Window extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private MouseManager mouseManager;
@@ -63,7 +65,7 @@ public class Window extends JFrame {
 	
 	private void updatePage() {
 		//clockDisplay.setText(""+clock.getTimeRaw());
-		clockDisplay.setText("Day "+clock.getDay()+", "+clock.getHour()+":"+clock.getMinute()+" "+clock.getMeridian());
+		clockDisplay.setText(clock.getDate()+" | "+clock.getTime());
 	}
 	
 	public void tick() {
