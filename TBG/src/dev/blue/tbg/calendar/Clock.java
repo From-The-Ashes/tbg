@@ -60,7 +60,7 @@ public class Clock {
 		return (int)(time/ticksPerHour)%24 < 12 ? "AM":"PM";
 	}
 	
-	public String getDate() {
+	public String getDateString() {
 		int year = getYear();
 		int dayOfYear = getDay();
 		int dayOfMonth = month.dayOfMonth(dayOfYear);
@@ -94,5 +94,21 @@ public class Clock {
 			case 3: return "rd";
 			default: return "th";
 		}
+	}
+	
+	public int getMonth() {
+		return month.get(getDay());
+	}
+	
+	public String getMonthName() {
+		return month.getName(getDay());
+	}
+	
+	public int getDayOfMonth() {
+		return month.dayOfMonth(getDay());
+	}
+	
+	public int daysThisMonth() {
+		return month.get
 	}
 }

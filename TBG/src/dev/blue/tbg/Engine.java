@@ -1,6 +1,7 @@
 package dev.blue.tbg;
 
 import dev.blue.tbg.calendar.Clock;
+import dev.blue.tbg.window.Window;
 
 public class Engine implements Runnable {
 	private Thread thread;

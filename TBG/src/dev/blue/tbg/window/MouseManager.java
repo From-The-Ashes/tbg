@@ -1,4 +1,4 @@
-package dev.blue.tbg;
+package dev.blue.tbg.window;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
