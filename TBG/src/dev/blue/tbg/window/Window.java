@@ -95,7 +95,7 @@ public class Window extends JFrame {
 		getContentPane().add(l.A(), l.B());
 		getContentPane().add(r.A(), r.B());
 		
-		CalendarWidget wcal = new CalendarWidget();
+		CalendarWidget wcal = new CalendarWidget(clock);
 		clockDisplay = new ClockWidget(clock);
 		rt.A().add(wcal);
 		rt.A().add(clockDisplay, clockDisplay.getConstraints());

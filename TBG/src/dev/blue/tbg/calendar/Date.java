@@ -6,7 +6,20 @@ public class Date {
 	private int currentYear;
 	
 	public Date(Clock clock) {
-		currentDay = clock.getDay();
+		currentDay = clock.getDayOfMonth();
 		currentMonth = clock.getMonth();
+		currentYear = clock.getYear();
+	}
+	
+	public int getCurrentDay() {
+		return currentDay;
+	}
+	
+	public int getCurrentMonth() {
+		return currentMonth;
+	}
+	
+	public int getCurrentYear() {
+		return currentYear;
 	}
 }

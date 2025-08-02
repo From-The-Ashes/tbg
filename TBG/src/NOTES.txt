@@ -1,0 +1,6 @@
+Research:
+	Record Keeping:
+		Allows use of forward/backward navigation on the calendar, as well as allowing visibility of metrics on past actions. 
+	Advertising:
+		Allows the investment of funds into potential growth, dictated by market status.
+	

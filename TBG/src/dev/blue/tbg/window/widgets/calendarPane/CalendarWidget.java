@@ -53,7 +53,7 @@ public class CalendarWidget extends JPanel {
 		setupDayCells();
 		add(dayGrid);
 
-		updateCalendar(currentMonth);
+		updateCalendar();
 	}
 
 	private JPanel createWeekdayHeader() {
@@ -74,7 +74,7 @@ public class CalendarWidget extends JPanel {
 	private void setupDayCells() {
 		for (int i = 0; i < 42; i++) {
 			JPanel cell = new JPanel(new BorderLayout());
-			cell.setBackground(Color.LIGHT_GRAY);
+			cell.setBackground(Color.DARK_GRAY);
 			cell.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 			final int index = i;
 
@@ -91,7 +91,7 @@ public class CalendarWidget extends JPanel {
 
 				@Override
 				public void mouseExited(MouseEvent e) {
-					cell.setBackground(Color.LIGHT_GRAY);
+					cell.setBackground(Color.DARK_GRAY);
 				}
 			});
 
@@ -107,7 +107,7 @@ public class CalendarWidget extends JPanel {
 		monthLabel.setText(clock.getMonthName() + " " + clock.getYear());
 
 		int start = getDayOfWeek(currentDay, currentMonth+1, currentYear);
-		int days = month.lengthOfMonth();
+		int days = clock.daysThisMonth();
 
 		for (int i = 0; i < 42; i++) {
 			JPanel cell = dayCells[i];

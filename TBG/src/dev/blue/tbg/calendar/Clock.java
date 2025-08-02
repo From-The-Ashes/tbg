@@ -109,6 +109,6 @@ public class Clock {
 	}
 	
 	public int daysThisMonth() {
-		return month.get
+		return month.daysByMonth(getMonth(), getYear());
 	}
 }
