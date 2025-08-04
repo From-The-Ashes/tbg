@@ -1,116 +1,116 @@
 package dev.blue.tbg.window.widgets.calendarPane;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.GridBagConstraints;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
-
+import javax.swing.*;
 import dev.blue.tbg.calendar.Clock;
 
 public class CalendarWidget extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private final JLabel monthLabel;
-	private GridBagConstraints bordergbc;
 	private final SquareGridPanel dayGrid;
 	private final JCell[] dayCells = new JCell[42];
-	private int currentMonth;
+	private final GridBagConstraints bordergbc;
+	private final Font cellFont;
+	private final Color cellBG = new Color(80, 80, 80);
+	private final Color cellFG = new Color(200, 200, 200);
 	private Clock clock;
-	private Font cellFont;
-	private Color cellBG;
-	private Color cellFG;
+	private int currentMonth;
+	private int columns = 7, rows = 6;
 
 	public CalendarWidget(Clock clock) {
-		this.currentMonth = clock.getMonth();
 		this.clock = clock;
-		
-		this.cellBG = new Color(80, 80, 80);
-		this.cellFG = new Color(200, 200, 200);
+		this.currentMonth = clock.getMonth();
+		this.cellFont = new Font("SansSerif", Font.PLAIN, 12);
 
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		// Layout for this widget
+		setLayout(new GridBagLayout());
 		setOpaque(false);
 
+		// GridBagConstraints for this widget's container
+		this.bordergbc = new GridBagConstraints();
+		this.bordergbc.fill = GridBagConstraints.BOTH;
+		this.bordergbc.gridx = 0;
+		this.bordergbc.gridy = 0;
+		this.bordergbc.weightx = 1;
+		this.bordergbc.weighty = 1;
+		this.bordergbc.insets = new Insets(2, 2, 2, 2);
+
+		// Month label
 		monthLabel = new JLabel("", SwingConstants.CENTER);
 		monthLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
 		monthLabel.setForeground(Color.WHITE);
-		monthLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-		add(monthLabel);
 
-		dayGrid = new SquareGridPanel(7, 7, 2, 2);
-		dayGrid.setPreferredSize(calculatePreferredGridSize(cellFont = new Font("SansSerif", Font.PLAIN, 12)));
+		GridBagConstraints gbcMonth = new GridBagConstraints();
+		gbcMonth.gridx = 0;
+		gbcMonth.gridy = 0;
+		gbcMonth.weightx = 1;
+		gbcMonth.weighty = 0.1;
+		gbcMonth.fill = GridBagConstraints.BOTH;
+		add(monthLabel, gbcMonth);
+
+		// Grid of days
+		dayGrid = new SquareGridPanel(rows+1, columns, 2, 2);
+		dayGrid.setPreferredSize(calculatePreferredGridSize(cellFont));
 		setupDayCells();
-		add(dayGrid);
-		
-		this.bordergbc = new GridBagConstraints();
-		this.bordergbc.fill = GridBagConstraints.BOTH;
-		this.bordergbc.gridx = 0; this.bordergbc.gridy = 0;
-		this.bordergbc.weightx = 0;
-		this.bordergbc.weighty = 1;
+
+		GridBagConstraints gbcGrid = new GridBagConstraints();
+		gbcGrid.gridx = 0;
+		gbcGrid.gridy = 1;
+		gbcGrid.weightx = 1;
+		gbcGrid.weighty = 0.9;
+		gbcGrid.fill = GridBagConstraints.BOTH;
+		add(dayGrid, gbcGrid);
 
 		update();
 	}
-	
+
 	public GridBagConstraints getConstraints() {
 		return bordergbc;
 	}
-	
+
 	private Dimension calculatePreferredGridSize(Font font) {
 		String[] days = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
-	    String longestLabel = days[0];
-	    FontMetrics metrics = getFontMetrics(font);
-	    for(int i = 0; i < days.length; i++) {
-	    	if(metrics.stringWidth(days[i]) > metrics.stringWidth(longestLabel)) {
-	    		longestLabel = days[i];
-	    	}
-	    }
-	    
-	    int cellWidth = metrics.stringWidth(longestLabel)*2;
-	    int cellHeight = metrics.getHeight() + 12;
-
-	    return new Dimension(cellWidth * 7, cellHeight * 7);
+		FontMetrics metrics = getFontMetrics(font);
+		int cellWidth = 0;
+		for (String day : days) {
+			cellWidth = Math.max(cellWidth, metrics.stringWidth(day));
+		}
+		int cellHeight = metrics.getHeight() + 12;
+		return new Dimension(cellWidth * columns, cellHeight * (rows+1));
 	}
 
 	private void setupDayCells() {
 		String[] days = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
 
-		for (int i = 0; i < 7; i++) {
+		for (String day : days) {
 			JPanel headerCell = new JPanel(new BorderLayout());
 			headerCell.setOpaque(false);
-			JLabel label = new JLabel(days[i], SwingConstants.CENTER);
+			JLabel label = new JLabel(day, SwingConstants.CENTER);
 			label.setFont(cellFont);
 			label.setForeground(cellFG);
 			headerCell.add(label, BorderLayout.CENTER);
 			dayGrid.add(headerCell);
 		}
 
-		for (int i = 7; i < 49; i++) {//Skips the header
+		for (int i = 0; i < columns*rows; i++) {
 			JCell cell = new JCell(cellFont, "");
 			cell.setBackground(cellBG);
-			cell.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-			cell.setFont(cellFont);
+			cell.setBorder(null);
 			cell.setColor(cellFG);
 
 			cell.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					if(cell.getValue() != "") {
+					if (!cell.getValue().isEmpty()) {
 						System.out.println("Clicked day " + cell.getValue());
 					}
 				}
 
 				@Override
 				public void mouseEntered(MouseEvent e) {
-					if(cell.getValue() != "") {
+					if (!cell.getValue().isEmpty()) {
 						cell.setBackground(cellFG);
 						cell.setColor(cellBG);
 					}
@@ -118,33 +118,45 @@ public class CalendarWidget extends JPanel {
 
 				@Override
 				public void mouseExited(MouseEvent e) {
-					if(cell.getValue() != "") {
+					if (!cell.getValue().isEmpty()) {
 						cell.setBackground(cellBG);
 						cell.setColor(cellFG);
 					}
 				}
 			});
 
-			dayCells[i - 7] = cell;
+			dayCells[i] = cell;
 			dayGrid.add(cell);
 		}
 	}
 
 	public void update() {
-		this.currentMonth = clock.getMonth();
-		int currentDay = clock.getDayOfMonth();
-		int currentYear = clock.getYear();
-		monthLabel.setText(clock.getMonthName() + " " + clock.getYear());
+		if (clock.dayLapse() || clock.getTimeRaw() <= 1) {
+			this.currentMonth = clock.getMonth();
+			int currentDay = clock.getDayOfMonth();
+			int currentYear = clock.getYear();
+			monthLabel.setText(clock.getMonthName() + ", " + clock.getYear());
 
-		int start = getDayOfWeek(currentDay, currentMonth + 1, currentYear);
-		int days = clock.daysThisMonth();
+			int start = getDayOfWeek(1, currentMonth + 1, currentYear);
+			int days = clock.daysThisMonth();
 
-		for (int day = 1; day <= days; day++) {
-			int index = start + day - 1;
-			
-			dayCells[index].setValue(""+day);
+			// Clear all cells
+			for (JCell cell : dayCells) {
+				cell.setValue("");
+				cell.setSelected(false);
+			}
+
+			// Populate active days
+			for (int day = 1; day <= days; day++) {
+				int index = start + day - 1;
+				dayCells[index].setValue("" + day);
+				if (day == currentDay) {
+					dayCells[index].setSelected(true);
+				}
+			}
 		}
 	}
+
 
 	public int getDayOfWeek(int day, int month, int year) {
 		if (month < 3) {

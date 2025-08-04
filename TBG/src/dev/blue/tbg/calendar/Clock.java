@@ -9,6 +9,7 @@ public class Clock {
 	private double ticksPerMinute;
 	private int startDay = 105;
 	private int startYear = 1800;
+	private boolean lapseDay = false;
 	private Month month;
 	
 	public Clock() {
@@ -27,8 +28,18 @@ public class Clock {
 		return time;
 	}
 	
-	public void incrementTime(int amt) {
+	public void incrementTime(int amt) {//This is akin to update()
+		int day = getDay();
 		time += amt;
+		if(getDay() > day) {
+			lapseDay = true;
+		}else {
+			lapseDay = false;
+		}
+	}
+	
+	public boolean dayLapse() {
+		return lapseDay;
 	}
 	
 	public int getMinute() {
@@ -47,7 +58,7 @@ public class Clock {
 		int days = getDay();
 	    int year = startYear;
 
-	    while(true) {
+	    while(true) {//gross loop but works
 	        int daysInYear = (year % 4 == 0 && ((year % 100 != 0) || (year % 400 == 0))) ? 366 : 365;
 	        if (days < daysInYear) break;
 	        days -= daysInYear;

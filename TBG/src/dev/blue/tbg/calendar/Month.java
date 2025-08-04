@@ -14,7 +14,7 @@ public class Month {
 	public String getName(int dayOfYear) {
 		int index = 0;
 		for(int i = 0; i < monthLengths.length; i++) {
-			if((index += monthLengths[i]) > dayOfYear) {
+			if((index += monthLengths[i]) >= dayOfYear) {
 				return monthNames[i];
 			}
 		}
@@ -23,7 +23,7 @@ public class Month {
 	public int get(int dayOfYear) {
 		int index = 0;
 		for(int i = 0; i < monthLengths.length; i++) {
-			if((index += monthLengths[i]) > dayOfYear) {
+			if((index += monthLengths[i]) >= dayOfYear) {
 				return i;
 			}
 		}
@@ -32,7 +32,7 @@ public class Month {
 	public int dayOfMonth(int dayOfYear) {
 		int index = 0;
 		for(int i = 0; i < monthLengths.length; i++) {
-			if((index += monthLengths[i]) > dayOfYear) {
+			if((index += monthLengths[i]) >= dayOfYear) {
 				return dayOfYear - (index - monthLengths[i]);
 			}
 		}

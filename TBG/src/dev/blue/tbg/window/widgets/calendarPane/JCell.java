@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
@@ -35,5 +36,13 @@ public class JCell extends JPanel{
 	
 	public void setColor(Color color) {
 		this.label.setForeground(color);
+	}
+	
+	public void setSelected(boolean selected) {
+		if(selected) {
+			this.setBorder(BorderFactory.createLineBorder(Color.GREEN));//color, thickness, rounded
+		}else {
+			this.setBorder(BorderFactory.createLineBorder(Color.GRAY));//color, thickness, rounded
+		}
 	}
 }

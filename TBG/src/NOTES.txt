@@ -3,4 +3,9 @@ Research:
 		Allows use of forward/backward navigation on the calendar, as well as allowing visibility of metrics on past actions. 
 	Advertising:
 		Allows the investment of funds into potential growth, dictated by market status.
-	
+Meta:
+	Time speed:
+		When the player increases how fast the game runs, the other in-game characters will see the player as 'busy' or 'rushed'.
+		The player being percieved as rushed will lead to fewer social calls, fewer chance deals, and less overall interaction. 
+		Characters will also have a slighty lower opinion of the player if the player has a low score, and higher conversely. 
+		This is becaused being rushed is considered rude unless the person is also successful. 

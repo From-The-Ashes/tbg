@@ -9,6 +9,9 @@ public class SquareGridPanel extends JPanel {
 	private final int cols;
 	private int value;
 
+	/**
+	 * Takes in rows, columns, hgap, and vgap.
+	 **/
 	public SquareGridPanel(int rows, int cols, int hgap, int vgap) {
 		super(new GridLayout(rows, cols, hgap, vgap));
 		this.rows = rows;
