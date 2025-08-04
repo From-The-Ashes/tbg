@@ -6,6 +6,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
+import java.awt.GridBagConstraints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -20,6 +21,7 @@ import dev.blue.tbg.calendar.Clock;
 public class CalendarWidget extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private final JLabel monthLabel;
+	private GridBagConstraints bordergbc;
 	private final SquareGridPanel dayGrid;
 	private final JCell[] dayCells = new JCell[42];
 	private int currentMonth;
@@ -48,8 +50,18 @@ public class CalendarWidget extends JPanel {
 		dayGrid.setPreferredSize(calculatePreferredGridSize(cellFont = new Font("SansSerif", Font.PLAIN, 12)));
 		setupDayCells();
 		add(dayGrid);
+		
+		this.bordergbc = new GridBagConstraints();
+		this.bordergbc.fill = GridBagConstraints.BOTH;
+		this.bordergbc.gridx = 0; this.bordergbc.gridy = 0;
+		this.bordergbc.weightx = 0;
+		this.bordergbc.weighty = 1;
 
-		updateCalendar();
+		update();
+	}
+	
+	public GridBagConstraints getConstraints() {
+		return bordergbc;
 	}
 	
 	private Dimension calculatePreferredGridSize(Font font) {
@@ -118,7 +130,7 @@ public class CalendarWidget extends JPanel {
 		}
 	}
 
-	public void updateCalendar() {
+	public void update() {
 		this.currentMonth = clock.getMonth();
 		int currentDay = clock.getDayOfMonth();
 		int currentYear = clock.getYear();

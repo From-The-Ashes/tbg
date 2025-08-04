@@ -17,7 +17,7 @@ public class ClockWidget extends JPanel {
 		this.bordergbc = new GridBagConstraints();
 		this.bordergbc.fill = GridBagConstraints.BOTH;
 		this.bordergbc.gridx = 0; this.bordergbc.gridy = 1;
-		this.bordergbc.weightx = 1;
+		this.bordergbc.weightx = 0;
 		this.bordergbc.weighty = 1;
 		this.text = new JLabel();
 		this.add(text);

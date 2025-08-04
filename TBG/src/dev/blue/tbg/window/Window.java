@@ -23,7 +23,8 @@ public class Window extends JFrame {
 	private Dimension dim;
 	private Clock clock;
 	
-	private ClockWidget clockDisplay;
+	private ClockWidget w_clock;
+	private CalendarWidget w_calendar;
 	
 	public Window(Engine engine) {
 		this.mouseManager = new MouseManager();
@@ -43,7 +44,6 @@ public class Window extends JFrame {
 		this.setLocationRelativeTo(null);
 		
 		this.getContentPane().setBackground(new Color(0, 0, 0));
-		this.getContentPane().setForeground(new Color(200, 200, 200));
 		
 		this.addMouseListener(mouseManager);
 		this.addMouseMotionListener(mouseManager);
@@ -95,15 +95,10 @@ public class Window extends JFrame {
 		getContentPane().add(l.A(), l.B());
 		getContentPane().add(r.A(), r.B());
 		
-		CalendarWidget wcal = new CalendarWidget(clock);
-		clockDisplay = new ClockWidget(clock);
-		rt.A().add(wcal);
-		rt.A().add(clockDisplay, clockDisplay.getConstraints());
-		
-		//clockDisplay = new JTextArea(""+clock.getTimeRaw());
-		//clockDisplay.setEditable(false);
-		//clockDisplay.setMinimumSize(new Dimension(100, 30));
-		//getContentPane().add(clockDisplay);
+		w_calendar = new CalendarWidget(clock);
+		w_clock = new ClockWidget(clock);
+		rt.A().add(w_calendar, w_calendar.getConstraints());
+		rt.A().add(w_clock, w_clock.getConstraints());
 	}
 	
 	private Pair<JPanel, GridBagConstraints> panel_lblt() {
@@ -280,7 +275,8 @@ public class Window extends JFrame {
 	}
 	
 	private void updatePage() {
-		clockDisplay.update();
+		w_clock.update();
+		w_calendar.update();
 	}
 	
 	public void tick() {
