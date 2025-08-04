@@ -5,13 +5,9 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GridLayout;
+import java.awt.FontMetrics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.time.LocalDate;
-import java.time.YearMonth;
-import java.time.format.TextStyle;
-import java.util.Locale;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -22,80 +18,102 @@ import javax.swing.SwingConstants;
 import dev.blue.tbg.calendar.Clock;
 
 public class CalendarWidget extends JPanel {
+	private static final long serialVersionUID = 1L;
 	private final JLabel monthLabel;
-	private final JPanel weekdayHeader;
 	private final SquareGridPanel dayGrid;
-	private final JPanel[] dayCells = new JPanel[42];
+	private final JCell[] dayCells = new JCell[42];
 	private int currentMonth;
 	private Clock clock;
+	private Font cellFont;
+	private Color cellBG;
+	private Color cellFG;
 
 	public CalendarWidget(Clock clock) {
 		this.currentMonth = clock.getMonth();
 		this.clock = clock;
+		
+		this.cellBG = new Color(80, 80, 80);
+		this.cellFG = new Color(200, 200, 200);
 
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		setOpaque(false);
 
-		// Month name
 		monthLabel = new JLabel("", SwingConstants.CENTER);
 		monthLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
 		monthLabel.setForeground(Color.WHITE);
 		monthLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 		add(monthLabel);
 
-		// Weekday header
-		weekdayHeader = createWeekdayHeader();
-		add(weekdayHeader);
-
-		// Day grid
-		dayGrid = new SquareGridPanel(6, 7, 2, 2);
-		dayGrid.setPreferredSize(new Dimension(280, 240)); // Ensures a usable size
+		dayGrid = new SquareGridPanel(7, 7, 2, 2);
+		dayGrid.setPreferredSize(calculatePreferredGridSize(cellFont = new Font("SansSerif", Font.PLAIN, 12)));
 		setupDayCells();
 		add(dayGrid);
 
 		updateCalendar();
 	}
-
-	private JPanel createWeekdayHeader() {
-		JPanel header = new JPanel(new GridLayout(1, 7, 2, 2));
-		header.setOpaque(false);
-		header.setMaximumSize(new Dimension(Integer.MAX_VALUE, 24)); // Prevents it from stretching
-
+	
+	private Dimension calculatePreferredGridSize(Font font) {
 		String[] days = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
-		for (String day : days) {
-			JLabel label = new JLabel(day, SwingConstants.CENTER);
-			label.setFont(new Font("SansSerif", Font.BOLD, 12));
-			label.setForeground(Color.LIGHT_GRAY);
-			header.add(label);
-		}
-		return header;
+	    String longestLabel = days[0];
+	    FontMetrics metrics = getFontMetrics(font);
+	    for(int i = 0; i < days.length; i++) {
+	    	if(metrics.stringWidth(days[i]) > metrics.stringWidth(longestLabel)) {
+	    		longestLabel = days[i];
+	    	}
+	    }
+	    
+	    int cellWidth = metrics.stringWidth(longestLabel)*2;
+	    int cellHeight = metrics.getHeight() + 12;
+
+	    return new Dimension(cellWidth * 7, cellHeight * 7);
 	}
 
 	private void setupDayCells() {
-		for (int i = 0; i < 42; i++) {
-			JPanel cell = new JPanel(new BorderLayout());
-			cell.setBackground(Color.DARK_GRAY);
+		String[] days = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
+
+		for (int i = 0; i < 7; i++) {
+			JPanel headerCell = new JPanel(new BorderLayout());
+			headerCell.setOpaque(false);
+			JLabel label = new JLabel(days[i], SwingConstants.CENTER);
+			label.setFont(cellFont);
+			label.setForeground(cellFG);
+			headerCell.add(label, BorderLayout.CENTER);
+			dayGrid.add(headerCell);
+		}
+
+		for (int i = 7; i < 49; i++) {//Skips the header
+			JCell cell = new JCell(cellFont, "");
+			cell.setBackground(cellBG);
 			cell.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-			final int index = i;
+			cell.setFont(cellFont);
+			cell.setColor(cellFG);
 
 			cell.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					System.out.println("Clicked day " + index);
+					if(cell.getValue() != "") {
+						System.out.println("Clicked day " + cell.getValue());
+					}
 				}
 
 				@Override
 				public void mouseEntered(MouseEvent e) {
-					cell.setBackground(new Color(180, 180, 255));
+					if(cell.getValue() != "") {
+						cell.setBackground(cellFG);
+						cell.setColor(cellBG);
+					}
 				}
 
 				@Override
 				public void mouseExited(MouseEvent e) {
-					cell.setBackground(Color.DARK_GRAY);
+					if(cell.getValue() != "") {
+						cell.setBackground(cellBG);
+						cell.setColor(cellFG);
+					}
 				}
 			});
 
-			dayCells[i] = cell;
+			dayCells[i - 7] = cell;
 			dayGrid.add(cell);
 		}
 	}
@@ -106,24 +124,14 @@ public class CalendarWidget extends JPanel {
 		int currentYear = clock.getYear();
 		monthLabel.setText(clock.getMonthName() + " " + clock.getYear());
 
-		int start = getDayOfWeek(currentDay, currentMonth+1, currentYear);
+		int start = getDayOfWeek(currentDay, currentMonth + 1, currentYear);
 		int days = clock.daysThisMonth();
-
-		for (int i = 0; i < 42; i++) {
-			JPanel cell = dayCells[i];
-			cell.removeAll();
-		}
 
 		for (int day = 1; day <= days; day++) {
 			int index = start + day - 1;
-			JLabel label = new JLabel(String.valueOf(day), SwingConstants.CENTER);
-			label.setFont(new Font("SansSerif", Font.PLAIN, 12));
-			label.setHorizontalAlignment(SwingConstants.CENTER);
-			dayCells[index].add(label, BorderLayout.CENTER);
+			
+			dayCells[index].setValue(""+day);
 		}
-
-		revalidate();
-		repaint();
 	}
 
 	public int getDayOfWeek(int day, int month, int year) {
@@ -135,6 +143,6 @@ public class CalendarWidget extends JPanel {
 		int J = year / 100;
 
 		int h = (day + (13 * (month + 1)) / 5 + K + (K / 4) + (J / 4) + 5 * J) % 7;
-		return h; // 0 = Saturday, 1 = Sunday, ..., 6 = Friday
+		return h; // 0 = Saturday
 	}
 }
