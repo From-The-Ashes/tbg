@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import dev.blue.tbg.Engine;
 import dev.blue.tbg.Pair;
 import dev.blue.tbg.calendar.Clock;
+import dev.blue.tbg.window.widgets.DisplayWidget;
 import dev.blue.tbg.window.widgets.calendarPane.CalendarWidget;
 import dev.blue.tbg.window.widgets.calendarPane.ClockWidget;
 
@@ -25,6 +26,7 @@ public class Window extends JFrame {
 	
 	private ClockWidget w_clock;
 	private CalendarWidget w_calendar;
+	private DisplayWidget w_display;
 	
 	public Window(Engine engine) {
 		this.mouseManager = new MouseManager();
@@ -97,8 +99,10 @@ public class Window extends JFrame {
 		
 		w_calendar = new CalendarWidget(clock);
 		w_clock = new ClockWidget(clock);
+		w_display = new DisplayWidget();
 		rt.A().add(w_calendar, w_calendar.getConstraints());
 		rt.A().add(w_clock, w_clock.getConstraints());
+		ltr.A().add(w_display);
 	}
 	
 	private Pair<JPanel, GridBagConstraints> panel_lblt() {

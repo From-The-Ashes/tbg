@@ -5,13 +5,13 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.*;
 import dev.blue.tbg.calendar.Clock;
+import dev.blue.tbg.window.widgets.Widget;
 
-public class CalendarWidget extends JPanel {
+public class CalendarWidget extends Widget {
 	private static final long serialVersionUID = 1L;
 	private final JLabel monthLabel;
 	private final SquareGridPanel dayGrid;
 	private final JCell[] dayCells = new JCell[42];
-	private final GridBagConstraints bordergbc;
 	private final Font cellFont;
 	private final Color cellBG = new Color(80, 80, 80);
 	private final Color cellFG = new Color(200, 200, 200);
@@ -29,13 +29,13 @@ public class CalendarWidget extends JPanel {
 		setOpaque(false);
 
 		// GridBagConstraints for this widget's container
-		this.bordergbc = new GridBagConstraints();
-		this.bordergbc.fill = GridBagConstraints.BOTH;
-		this.bordergbc.gridx = 0;
-		this.bordergbc.gridy = 0;
-		this.bordergbc.weightx = 1;
-		this.bordergbc.weighty = 1;
-		this.bordergbc.insets = new Insets(2, 2, 2, 2);
+		this.gbc = new GridBagConstraints();
+		this.gbc.fill = GridBagConstraints.BOTH;
+		this.gbc.gridx = 0;
+		this.gbc.gridy = 0;
+		this.gbc.weightx = 1;
+		this.gbc.weighty = 1;
+		this.gbc.insets = new Insets(2, 2, 2, 2);
 
 		// Month label
 		monthLabel = new JLabel("", SwingConstants.CENTER);
@@ -64,10 +64,6 @@ public class CalendarWidget extends JPanel {
 		add(dayGrid, gbcGrid);
 
 		update();
-	}
-
-	public GridBagConstraints getConstraints() {
-		return bordergbc;
 	}
 
 	private Dimension calculatePreferredGridSize(Font font) {
