@@ -1,5 +1,7 @@
 package dev.blue.tbg.calendar;
 
+import dev.blue.tbg.Main;
+
 public class Clock {
 	private int TPS = 60;
 	private long time = 0;
@@ -12,12 +14,13 @@ public class Clock {
 	private boolean lapseDay = false;
 	private Month month;
 	
-	public Clock() {
+	public Clock(long time) {
 		ticksPerDay = secondsPerDay*TPS;
 		ticksPerHour = ticksPerDay/24;
 		ticksPerMinute = ticksPerHour/60;
 		month = new Month();
 		month.setYear(startYear);
+		this.time = time;
 	}
 	
 	public int getTPS() {
@@ -36,6 +39,7 @@ public class Clock {
 		}else {
 			lapseDay = false;
 		}
+		Main.getSave().getPath("SaveName", "Time").setValue(time);
 	}
 	
 	public boolean dayLapse() {

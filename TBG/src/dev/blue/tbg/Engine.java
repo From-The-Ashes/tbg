@@ -1,5 +1,6 @@
 package dev.blue.tbg;
 
+import dev.blue.nml.Node;
 import dev.blue.tbg.calendar.Clock;
 import dev.blue.tbg.window.Window;
 
@@ -9,11 +10,17 @@ public class Engine implements Runnable {
 	private Window window;
 	private Clock clock;
 	private int tickrate;
+	private Node save;
+	private int ticksPerSave = 300;
+	private int ticksTilSave = 300;
 	
-	public Engine() {
+	public Engine(Node root) {
+		this.save = root;
 		this.thread = new Thread(this);
 		running = false;
-		clock = new Clock();
+		long clockStart = Long.parseLong(root.getPath("SaveName", "Time").getValue());
+		System.out.println("Starting clock at time "+clockStart);
+		clock = new Clock(clockStart);
 		window = new Window(this);
 	}
 	
@@ -61,6 +68,15 @@ public class Engine implements Runnable {
 	public void update() {
 		clock.incrementTime(1);
 		window.tick();
+		ticksTilSave--;
+		if(ticksTilSave < 0) {
+			ticksTilSave = ticksPerSave;
+			saveGameData();
+		}
+	}
+	
+	public void saveGameData() {
+		Main.saveGame();
 	}
 	
 	public int getTickrate() {

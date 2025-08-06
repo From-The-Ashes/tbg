@@ -63,7 +63,7 @@ public class CalendarWidget extends Widget {
 		gbcGrid.fill = GridBagConstraints.BOTH;
 		add(dayGrid, gbcGrid);
 
-		update();
+		update(true);
 	}
 
 	private Dimension calculatePreferredGridSize(Font font) {
@@ -126,8 +126,8 @@ public class CalendarWidget extends Widget {
 		}
 	}
 
-	public void update() {
-		if (clock.dayLapse() || clock.getTimeRaw() <= 1) {
+	public void update(boolean force) {
+		if (clock.dayLapse() || force) {
 			this.currentMonth = clock.getMonth();
 			int currentDay = clock.getDayOfMonth();
 			int currentYear = clock.getYear();

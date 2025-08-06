@@ -1,6 +1,11 @@
 package dev.blue.tbg;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Scanner;
+
+import dev.blue.nml.NMLParser;
+import dev.blue.nml.Node;
 
 public class Main {
 	public static Scanner scanner;
@@ -9,15 +14,63 @@ public class Main {
 	private static int sdelay = 750;
 	private static int ldelay = 1000;
 	private static Engine engine;
+	private static File save;
+	private static NMLParser nml;
+	private static Node root;
+	public static String saveName;
 
 	public static void main(String[] args) {
+		nml = new NMLParser();
+		save = new File("Plantation.nml");
+		saveName = "TestSaveName";
+		root = new Node("ROOT", null);
+		try {
+			if(save.createNewFile()) {
+				System.out.println("No save file found, creating new game.");
+				createDefaultSave();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			root = nml.readFromFile(save.getPath());
+		} catch (IOException e) {
+			e.printStackTrace();
+			return;
+		}
 		//scanner = new Scanner(System.in);
 		//sayfast("-------------------------TBG-------------------------\n\n\n");
 		//engageMainMenu();
 		//pause(1200);
 		//engageCharacterCreation();
-		engine = new Engine();
+		engine = new Engine(root);
 		engine.start();
+	}
+	
+	private static void createDefaultSave() {
+		Node save = root.addChild("SaveName", saveName);
+		save.addChild("Time", 0);
+		save.addChild("TPS", 60);
+		save.addChild("Assets");
+		saveGame();
+	}
+	
+	public static Node getSave() {
+		return root;
+	}
+	
+	public static void saveGame() {
+		try {
+			nml.writeToFile(root, save.getPath());
+		} catch (IOException e) {
+			System.out.println("ERROR: Could not save game!");
+			e.printStackTrace();
+		}
+	}
+	
+	public static void exitGame() {
+		saveGame();
+		System.exit(0);
 	}
 	
 	private static void engageMainMenu() {}

@@ -6,11 +6,14 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Toolkit;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import dev.blue.tbg.Engine;
+import dev.blue.tbg.Main;
 import dev.blue.tbg.Pair;
 import dev.blue.tbg.calendar.Clock;
 import dev.blue.tbg.window.widgets.DisplayWidget;
@@ -37,13 +40,39 @@ public class Window extends JFrame {
 	}
 	
 	private void setup() {
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.setTitle("Text-Based Game");
 		this.setIconImage(null);
 		this.setPreferredSize(dim);
 		this.setMinimumSize(dim);
 		this.setMaximumSize(dim);
 		this.setLocationRelativeTo(null);
+		
+		this.addWindowListener(new WindowListener() {
+			
+			@Override
+			public void windowOpened(WindowEvent e) {
+			}
+			@Override
+			public void windowIconified(WindowEvent e) {
+			}
+			@Override
+			public void windowDeiconified(WindowEvent e) {
+			}
+			@Override
+			public void windowDeactivated(WindowEvent e) {
+			}
+			@Override
+			public void windowClosing(WindowEvent e) {
+			}
+			@Override
+			public void windowClosed(WindowEvent e) {
+				Main.exitGame();
+			}
+			@Override
+			public void windowActivated(WindowEvent e) {
+			}
+		});
 		
 		this.getContentPane().setBackground(new Color(0, 0, 0));
 		
@@ -280,7 +309,7 @@ public class Window extends JFrame {
 	
 	private void updatePage() {
 		w_clock.update();
-		w_calendar.update();
+		w_calendar.update(false);
 	}
 	
 	public void tick() {
