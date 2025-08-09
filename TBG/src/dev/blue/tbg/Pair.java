@@ -1,8 +1,8 @@
 package dev.blue.tbg;
 
 public class Pair<A, B> {
-	private final A first;
-	private final B second;
+	private A first;
+	private B second;
 
 	public Pair(A first, B second) {
 		this.first = first;
@@ -15,6 +15,14 @@ public class Pair<A, B> {
 
 	public B B() {
 		return second;
+	}
+	
+	public void setA(A object) {
+		this.first = object;
+	}
+	
+	public void setB(B object) {
+		this.second = object;
 	}
 
 	@Override

@@ -1,14 +1,15 @@
 package dev.blue.tbg;
 
 import dev.blue.nml.Node;
-import dev.blue.tbg.calendar.Clock;
+import dev.blue.tbg.calendar.DateTime;
+import dev.blue.tbg.calendar.StepClock;
 import dev.blue.tbg.window.Window;
 
 public class Engine implements Runnable {
 	private Thread thread;
 	private boolean running;
 	private Window window;
-	private Clock clock;
+	private StepClock clock;
 	private int tickrate;
 	private Node save;
 	private int ticksPerSave = 300;
@@ -18,9 +19,11 @@ public class Engine implements Runnable {
 		this.save = root;
 		this.thread = new Thread(this);
 		running = false;
-		long clockStart = Long.parseLong(root.getPath("SaveName", "Time").getValue());
-		System.out.println("Starting clock at time "+clockStart);
-		clock = new Clock(clockStart);
+		DateTime clockStart = DateTime.loadFromFile(save);
+		int TPS = Integer.parseInt(root.getPath("SaveName", "TPS").getValue());
+		int secondsPerDay = Integer.parseInt(root.getPath("SaveName", "SecondsPerDay").getValue());
+		System.out.println("Starting clock at time "+clockStart.toString());
+		clock = new StepClock(clockStart, TPS, secondsPerDay);
 		window = new Window(this);
 	}
 	
@@ -41,8 +44,7 @@ public class Engine implements Runnable {
 
 	@Override
 	public void run() {
-		//Insert update loop here. 30s per day maybe?
-		final long interval = 1000000000L / clock.getTPS();
+		final long interval = 1_000_000_000L / clock.getTPS();
 		long lastTick = System.nanoTime();
 		while (this.running) {
 			long now = System.nanoTime();
@@ -66,7 +68,7 @@ public class Engine implements Runnable {
 	}
 	
 	public void update() {
-		clock.incrementTime(1);
+		clock.increment();
 		window.tick();
 		ticksTilSave--;
 		if(ticksTilSave < 0) {
@@ -83,7 +85,7 @@ public class Engine implements Runnable {
 		return tickrate;
 	}
 	
-	public Clock getClock() {
+	public StepClock getClock() {
 		return clock;
 	}
 }

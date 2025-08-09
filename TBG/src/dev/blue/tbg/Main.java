@@ -47,10 +47,11 @@ public class Main {
 		engine.start();
 	}
 	
-	private static void createDefaultSave() {
+	private static void createDefaultSave() {//d_m_y_h_m_s
 		Node save = root.addChild("SaveName", saveName);
-		save.addChild("Time", 0);
+		save.addChild("DateTime", "14_3_1800_0_0_0");
 		save.addChild("TPS", 60);
+		save.addChild("SecondsPerDay", 30);
 		save.addChild("Assets");
 		saveGame();
 	}

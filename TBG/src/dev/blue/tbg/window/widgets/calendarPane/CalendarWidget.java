@@ -4,10 +4,13 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.*;
-import dev.blue.tbg.calendar.Clock;
+
+import dev.blue.tbg.EventListener;
+import dev.blue.tbg.EventLogger.Event;
+import dev.blue.tbg.calendar.StepClock;
 import dev.blue.tbg.window.widgets.Widget;
 
-public class CalendarWidget extends Widget {
+public class CalendarWidget extends Widget implements EventListener {
 	private static final long serialVersionUID = 1L;
 	private final JLabel monthLabel;
 	private final SquareGridPanel dayGrid;
@@ -15,13 +18,11 @@ public class CalendarWidget extends Widget {
 	private final Font cellFont;
 	private final Color cellBG = new Color(80, 80, 80);
 	private final Color cellFG = new Color(200, 200, 200);
-	private Clock clock;
-	private int currentMonth;
+	private StepClock clock;
 	private int columns = 7, rows = 6;
 
-	public CalendarWidget(Clock clock) {
+	public CalendarWidget(StepClock clock) {
 		this.clock = clock;
-		this.currentMonth = clock.getMonth();
 		this.cellFont = new Font("SansSerif", Font.PLAIN, 12);
 
 		// Layout for this widget
@@ -126,33 +127,39 @@ public class CalendarWidget extends Widget {
 		}
 	}
 
-	public void update(boolean force) {
-		if (clock.dayLapse() || force) {
-			this.currentMonth = clock.getMonth();
-			int currentDay = clock.getDayOfMonth();
-			int currentYear = clock.getYear();
-			monthLabel.setText(clock.getMonthName() + ", " + clock.getYear());
+	@Override
+	public void CatchEvent(Event event) {
+		if(event == Event.INC_DAY) {
+			update(false);
+		}else if(event == Event.INC_MONTH || event == Event.INC_YEAR) {
+			update(true);
+		}
+	}
+	
+	public void update(boolean full) {
+		int currentMonth = clock.getMonth();
+		int currentDay = clock.getDayOfMonth();
+		int currentYear = clock.getYear();
+		monthLabel.setText(StepClock.getMonthName(currentMonth) + ", " + clock.getYear());
 
-			int start = getDayOfWeek(1, currentMonth + 1, currentYear);
-			int days = clock.daysThisMonth();
+		int start = getDayOfWeek(1, currentMonth + 1, currentYear);
+		int days = clock.daysInMonth(currentMonth, currentYear);
 
-			// Clear all cells
-			for (JCell cell : dayCells) {
+		for (JCell cell : dayCells) {
+			if(full) {
 				cell.setValue("");
-				cell.setSelected(false);
 			}
+			cell.setSelected(false);
+		}
 
-			// Populate active days
-			for (int day = 1; day <= days; day++) {
-				int index = start + day - 1;
-				dayCells[index].setValue("" + day);
-				if (day == currentDay) {
-					dayCells[index].setSelected(true);
-				}
+		for (int day = 1; day <= days; day++) {
+			int index = start + day - 1;
+			dayCells[index].setValue("" + day);
+			if (day == currentDay) {
+				dayCells[index].setSelected(true);
 			}
 		}
 	}
-
 
 	public int getDayOfWeek(int day, int month, int year) {
 		if (month < 3) {
@@ -164,5 +171,10 @@ public class CalendarWidget extends Widget {
 
 		int h = (day + (13 * (month + 1)) / 5 + K + (K / 4) + (J / 4) + 5 * J) % 7;
 		return h; // 0 = Saturday
+	}
+
+	@Override
+	public Event[] getEvents() {
+		return new Event[]{Event.INC_DAY, Event.INC_MONTH, Event.INC_YEAR};
 	}
 }
