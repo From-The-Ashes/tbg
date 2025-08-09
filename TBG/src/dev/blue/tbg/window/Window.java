@@ -18,6 +18,7 @@ import dev.blue.tbg.calendar.StepClock;
 import dev.blue.tbg.window.widgets.DisplayWidget;
 import dev.blue.tbg.window.widgets.calendarPane.CalendarWidget;
 import dev.blue.tbg.window.widgets.calendarPane.ClockWidget;
+import dev.blue.tbg.window.widgets.progressPane.EnvironmentWidget;
 
 public class Window extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -29,6 +30,7 @@ public class Window extends JFrame {
 	private WindowPanes wp;
 	private ClockWidget w_clock;
 	private CalendarWidget w_calendar;
+	private EnvironmentWidget w_environ;
 	private DisplayWidget w_display;
 	
 	public Window(Engine engine) {
@@ -130,9 +132,11 @@ public class Window extends JFrame {
 		w_calendar = new CalendarWidget(clock);
 		w_clock = new ClockWidget(clock);
 		w_display = new DisplayWidget();
+		w_environ = new EnvironmentWidget();
 		rt.A().add(w_calendar, w_calendar.getConstraints());
 		rt.A().add(w_clock, w_clock.getConstraints());
 		ltr.A().add(w_display);
+		ltr.A().add(w_environ);
 		
 		clock.getLogger().registerListener(w_calendar);
 		clock.getLogger().registerListener(w_clock);

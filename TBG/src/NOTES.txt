@@ -10,9 +10,11 @@ Meta:
 		Characters will also have a slighty lower opinion of the player if the player has a low score, and higher conversely. 
 		This is becaused being rushed is considered rude unless the person is also successful. 
 		
+
+To register an event, use clock.getLogger().registerListener(); this is intentionally minimal. 
+To create a listener, set a class to implements EventListener, and then use the getEvents() function to return a list of all events to catch. 
+
+
 Updates:
-- Cleaned up some code, comments, and docs. Moved JPanels to their own class.
-- Fixing bug on month failure during year turnover caused by a days-in-year counting issue.
-- Deleted Month and Clock class in favor of step-wise calculations in the new StepClock class. 
-- Created the DateTime class for the front-end side of the step clock.
-- Finished building a complete events system that can call and catch events from various classes.
+- Cleaned up main class
+

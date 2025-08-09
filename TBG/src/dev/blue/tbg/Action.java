@@ -1,8 +1,8 @@
 package dev.blue.tbg;
 
-public class Action {
-	private String name;
-	private int totalTime;
-	private int currentTime;
-	private Asset reward;
+public abstract class Action {
+	protected String name;
+	protected int totalTime;
+	protected int currentTime;
+	protected Asset reward;
 }
