@@ -33,7 +33,10 @@ public class Window extends JFrame {
 	private EnvironmentWidget w_environ;
 	private DisplayWidget w_display;
 	
+	private Engine engine;
+	
 	public Window(Engine engine) {
+		this.engine = engine;
 		this.mouseManager = new MouseManager();
 		this.keyboardManager = new KeyboardManager();
 		dim = new Dimension(Toolkit.getDefaultToolkit().getScreenSize());
@@ -132,14 +135,16 @@ public class Window extends JFrame {
 		w_calendar = new CalendarWidget(clock);
 		w_clock = new ClockWidget(clock);
 		w_display = new DisplayWidget();
-		w_environ = new EnvironmentWidget();
+		w_environ = new EnvironmentWidget(engine.getSim().climate);
+		
 		rt.A().add(w_calendar, w_calendar.getConstraints());
 		rt.A().add(w_clock, w_clock.getConstraints());
 		ltr.A().add(w_display);
 		ltr.A().add(w_environ);
 		
-		clock.getLogger().registerListener(w_calendar);
-		clock.getLogger().registerListener(w_clock);
+		clock.registerListener(w_calendar);
+		clock.registerListener(w_clock);
+		clock.registerListener(w_environ);
 	}
 	
 	private void updatePage() {

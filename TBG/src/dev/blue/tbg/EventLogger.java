@@ -20,6 +20,9 @@ public class EventLogger {
 		listeners.add(listener);
 	}
 	
+	/**
+	 *For any provided event e, sifts through the registry and notifies each listening class of the event. 
+	 **/
 	public void logEvent(Event e) {
 		for(EventListener each:listeners) {
 			Event[] events = each.getEvents();

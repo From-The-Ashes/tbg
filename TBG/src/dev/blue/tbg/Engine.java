@@ -10,6 +10,7 @@ public class Engine implements Runnable {
 	private boolean running;
 	private Window window;
 	private StepClock clock;
+	private Sim sim;
 	private int tickrate;
 	private Node save;
 	private int ticksPerSave = 300;
@@ -19,6 +20,7 @@ public class Engine implements Runnable {
 		this.save = root;
 		this.thread = new Thread(this);
 		running = false;
+		sim = new Sim();
 		DateTime clockStart = DateTime.loadFromFile(save);
 		int TPS = Integer.parseInt(root.getPath("SaveName", "TPS").getValue());
 		int secondsPerDay = Integer.parseInt(root.getPath("SaveName", "SecondsPerDay").getValue());
@@ -69,6 +71,7 @@ public class Engine implements Runnable {
 	
 	public void update() {
 		clock.increment();
+		sim.update();
 		window.tick();
 		ticksTilSave--;
 		if(ticksTilSave < 0) {
@@ -87,6 +90,10 @@ public class Engine implements Runnable {
 	
 	public StepClock getClock() {
 		return clock;
+	}
+	
+	public Sim getSim() {
+		return sim;
 	}
 }
 //Plantation simulator complete with different crops, seasons, employees, servants, slaves, animals, markets, weather events, political changes, etc. 

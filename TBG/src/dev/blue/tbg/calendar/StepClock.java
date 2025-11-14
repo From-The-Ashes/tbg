@@ -1,12 +1,10 @@
 package dev.blue.tbg.calendar;
 
 import dev.blue.tbg.EventLogger;
-import dev.blue.tbg.EventLogger.Event;
 import dev.blue.tbg.Main;
 import dev.blue.tbg.Pair;
 
-public class StepClock {
-	private EventLogger logger;
+public class StepClock extends EventLogger {
 	private double timeOverflow;
 	private int seconds;
 	private int minutes;
@@ -26,7 +24,6 @@ public class StepClock {
 			new Pair<String, Integer>("November", 30), new Pair<String, Integer>("December", 31)};
 	
 	public StepClock(DateTime dt, int TPS, int secondsPerDay) {
-		logger = new EventLogger();
 		int ticksPerSimDay = secondsPerDay * TPS;
 		this.secondsPerStep = 86400.0 / ticksPerSimDay;//86400 is 24h, 60m, 60s
 		this.TPS = TPS;
@@ -80,11 +77,7 @@ public class StepClock {
 	}
 	
 	private void announce(Event event) {
-		logger.logEvent(event);
-	}
-	
-	public EventLogger getLogger() {
-		return logger;
+		logEvent(event);
 	}
 	
 	public int getTPS() {

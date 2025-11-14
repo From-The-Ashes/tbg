@@ -41,10 +41,17 @@ public class Main {
 		save.addChild("DateTime", "14_3_1800_0_0_0");
 		save.addChild("TPS", 60);
 		save.addChild("SecondsPerDay", 30);
+		Node climate = save.addChild("Climate");
+		climate.addChild("T", 72);
+		climate.addChild("H", 61);
+		climate.addChild("P", 1);
 		save.addChild("Assets");
 		saveGame();
 	}
 	
+	/**
+	 *Use this as the node to which all saved data should be written.
+	 **/
 	public static Node getSave() {
 		return root;
 	}

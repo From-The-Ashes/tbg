@@ -1,5 +1,9 @@
 SaveName: TestSaveName
-- DateTime: 4_4_1800_0_44_48
+- DateTime: 7_4_1800_12_52_48
 - TPS: 60
 - SecondsPerDay: 30
 - Assets
+- Climate
+-- T: 53
+-- H: 11
+-- P: 0
